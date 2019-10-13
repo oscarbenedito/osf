@@ -82,6 +82,27 @@ if 'github.com' in tokens:
         page += 1
         repositories = get_repositories_data(url, page)
 
+# custom
+if os.path.exists("custom_directories.json"):
+    custom_file = open('custom_directories.json', 'r')
+    repositories = json.load(custom_file)
+    custom_file.close()
+    for repository in repositories:
+        clone_dir = 'repositories/' + repository['host'] + '/' + repository['path']
+        print(repository['host'] + '/' + repository['path'])
+        if os.path.isdir(clone_dir):
+            git.cmd.Git(clone_dir).fetch()
+        else:
+            os.system('git clone --mirror ' + repository['ssh_url'] + ' ' + clone_dir)
+        if repository['host'] not in backup_data['sites']:
+            backup_data['sites'][repository['host']] = []
+        backup_data['sites'][repository['host']].append({
+            'name': repository['name'],
+            'description': repository['description'],
+            'path': repository['path'],
+            'ssh_url': repository['ssh_url']
+        })
+
 with open('backup_data.json', 'w', encoding='utf-8') as output_file:
     json.dump(backup_data, output_file, ensure_ascii=False)
     output_file.close()
