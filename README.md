@@ -34,13 +34,13 @@ If you want to backup repositories from which you are not a member on the curren
 
 ```json
 [
-	{
-		"name":"<Repository name - for backup information>",
-		"description":"<Repository description - for backup information>",
-		"path":"<Repository path where the backup will be saved>",
-		"ssh_url":"<Repository url>",
-		"host":"<Repository host - for backup information and stablishing saving directory>"
-	}
+  {
+    "name":"<Repository name - for backup information>",
+    "description":"<Repository description - for backup information>",
+    "path":"<Repository path where the backup will be saved>",
+    "ssh_url":"<Repository url>",
+    "host":"<Repository host - for backup information and stablishing saving directory>"
+  }
 ]
 ```
 
