@@ -25,7 +25,10 @@ backup_data = {}
 backup_data['time'] = str(datetime.datetime.now())
 backup_data['sites'] = {}
 
-tokens = json.load(open('tokens.json'))
+tokens_file = open('tokens.json')
+tokens = json.load(tokens_file)
+tokens_file.close()
+
 
 def get_repositories_data(url, page):
     response = urllib.request.urlopen(url + '&page=' + str(page))
@@ -33,7 +36,7 @@ def get_repositories_data(url, page):
 
 # gitlab.com
 if 'gitlab.com' in tokens:
-    url = 'https://gitlab.com/api/v4/projects?private_token='+ tokens['gitlab.com'] + '&per_page=100&membership=true'
+    url = 'https://gitlab.com/api/v4/projects?private_token=' + tokens['gitlab.com'] + '&per_page=100&membership=true'
     page = 1
     repositories = get_repositories_data(url, page)
 
@@ -46,12 +49,12 @@ if 'gitlab.com' in tokens:
                 git.cmd.Git(clone_dir).fetch()
             else:
                 os.system('git clone --mirror ' + repository['ssh_url_to_repo'] + ' ' + clone_dir)
-                backup_data['sites']['gitlab.com'].append({
-                    'name':repository['name'],
-                    'description':repository['description'],
-                    'path':repository['path_with_namespace'],
-                    'ssh_url':repository['ssh_url_to_repo']
-                })
+            backup_data['sites']['gitlab.com'].append({
+                'name': repository['name'],
+                'description': repository['description'],
+                'path': repository['path_with_namespace'],
+                'ssh_url': repository['ssh_url_to_repo']
+            })
         page += 1
         repositories = get_repositories_data(url, page)
 
@@ -70,14 +73,15 @@ if 'github.com' in tokens:
                 git.cmd.Git(clone_dir).fetch()
             else:
                 os.system('git clone --mirror ' + repository['ssh_url'] + ' ' + clone_dir)
-                backup_data['sites']['github.com'].append({
-                    'name':repository['name'],
-                    'description':repository['description'],
-                    'path':repository['full_name'],
-                    'ssh_url':repository['ssh_url']
-                })
+            backup_data['sites']['github.com'].append({
+                'name': repository['name'],
+                'description': repository['description'],
+                'path': repository['full_name'],
+                'ssh_url': repository['ssh_url']
+            })
         page += 1
         repositories = get_repositories_data(url, page)
 
-with open('backup_data2.json', 'w') as file:
-    json.dump(backup_data, file)
+with open('backup_data.json', 'w', encoding='utf-8') as output_file:
+    json.dump(backup_data, output_file, ensure_ascii=False)
+    output_file.close()
