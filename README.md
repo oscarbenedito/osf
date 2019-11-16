@@ -1,26 +1,40 @@
 # Markion
 Markion is a Python script to allow writing literate programs using Markdown. Markion retrieves the tangled code in a file and written it to the specified files in the output directory. This README file is an example of a file that Markion can process, indeed, this file will give you Markion itself!
 
-## Prerequisites
-In order to run the program, you will need `python3`.
+## Using Markion
 
-## Running the program
+### Creating the input file
+To use Markion, create a Mardown file normally, and insert code snippets as you would typically with Markdown. If you want to use that code for your output files, you should use the following syntax:
+
+<pre>
+```[language] block|file blockid|filename
+code snippet
+```
+</pre>
+
+Specifing the language is optional (but you should put a space between the <code>```</code> and either "block" or "file"). The next word specifies wether the code is a block or it is the content of a file, and the last word represents the block ID (to include it in other snippets) or the output file name (where the code will be written) respectively. You may add comments if desired at the end of the line, both Markdown and Markion will ignore them.
+
+### Prerequisites
+In order to run the program, you will need Python version 3.6 or later.
+
+### Running the program
 To run the program, execute the file `markion.py` followed by the input file.
 
 ```
-python3 markion.py file
+python3.6 markion.py file
 ```
 
 There is an addition option `--output-directory` (or `-d`) to specify an output directory and you can also run the program with `--help` (or `-h`) to get help about the program's usage.
 
-## Program explanation
-First of all, we will write the license notice and import all the required libraries.
+## Explanation of the program
+First of all, we will make it executable, we'll write the license notice and import all the required libraries.
 ```python file markion.py
+#!/usr/bin/env python3.6
 [[ include license ]]
 import os, sys, re, argparse
 ```
 
-### Arguments
+### Program arguments
 We will use Python's `argparse` package to deal with our program's arguments. We initialize the parser with a brief description of the program's utility.
 ```python file markion.py
 parser = argparse.ArgumentParser(description='Markion is a simple scripts that retrieves tangled code from Markdown.')
@@ -38,14 +52,14 @@ Finally we assign the arguments' values to the `args` variable to use it later o
 args = parser.parse_args()
 ```
 
-### Read input
+### Reading the input file
 We read the input file and copy the contents to a variable `inp`.
 ```python file markion.py
 with open(args.file[0], 'r') as f:
     inp = f.read()
 ```
 
-### Extract code
+### Extracting the tangled code
 We extract the important pieces of code from the `inp` variable. To do so there are two regular expressions, one that matches the blocks and one that matches the content to output in the files. We get all the snippets and save them into the variables `blocks` and `files`.
 ```python file markion.py
 r_block = '```[\w\-.]*\s+block\s+([\w.-]+).*?\n(.*?)\n```\s*?\n'
@@ -54,7 +68,7 @@ blocks = re.findall(r_block, inp, flags = re.DOTALL)
 files = re.findall(r_file, inp, flags = re.DOTALL)
 ```
 
-### Resolve blocks
+### Resolving includes in the tangled code
 For each file specified in the input, we resolve all the blocks that are included (recursively). To do so we use the function `resolve`.
 ```python file markion.py
 [[ include resolve ]]
@@ -83,7 +97,7 @@ def resolve(content, blocks):
     return content
 ```
 
-### Write files
+### Writing the output to the corresponding files
 Finally, if there weren't any errors, we write the output code into the respective files. To do so we create the output directory if not already created:
 ```python file markion.py
 if not os.path.exists(args.out_dir):
