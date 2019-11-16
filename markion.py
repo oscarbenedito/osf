@@ -19,6 +19,7 @@ import os, sys, re, argparse
 parser = argparse.ArgumentParser(description='Markion is a simple scripts that retrieves tangled code from Markdown.')
 parser.add_argument('file', metavar='file', type=str, nargs=1, help='Input file.')
 parser.add_argument('-d', '--output-directory', dest='out_dir', type=str, default=os.getcwd(), help='Change the output directory.')
+parser.add_argument('-D', '--auto-directory', dest='auto_dir', action='store_true', help='Auto detect output directory.')
 args = parser.parse_args()
 with open(args.file[0], 'r') as f:
     inp = f.read()
@@ -46,6 +47,8 @@ for f in files:
     if f[0] not in file_content:
         file_content[f[0]] = ''
     file_content[f[0]] += resolve(f[1], block_content)
+if args.auto_dir:
+    args.out_dir = os.path.dirname(args.file[0])
 if not os.path.exists(args.out_dir):
     os.mkdirs(args.out_dir)
 for fn, fc in file_content.items():

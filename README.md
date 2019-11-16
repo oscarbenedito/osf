@@ -43,9 +43,18 @@ One of the arguments is the name of the input file:
 ```python file markion.py
 parser.add_argument('file', metavar='file', type=str, nargs=1, help='Input file.')
 ```
-The other argument is optional and it let's the user specify the output directory.
+Another optional argument lets the user specify the output directory.
 ```python file markion.py
 parser.add_argument('-d', '--output-directory', dest='out_dir', type=str, default=os.getcwd(), help='Change the output directory.')
+```
+The other argument is also optional and it lets the program automatically detect the output directory (based on the file's directory). This option will override the `--output-directory` option.
+```python file markion.py
+parser.add_argument('-D', '--auto-directory', dest='auto_dir', action='store_true', help='Auto detect output directory.')
+```
+To calculate the directory automatically, we simply check the input file's directory.
+```python block auto_dir
+if args.auto_dir:
+    args.out_dir = os.path.dirname(args.file[0])
 ```
 Finally we assign the arguments' values to the `args` variable to use it later on.
 ```python file markion.py
@@ -98,8 +107,9 @@ def resolve(content, blocks):
 ```
 
 ### Writing the output to the corresponding files
-Finally, if there weren't any errors, we write the output code into the respective files. To do so we create the output directory if not already created:
+Finally, if there weren't any errors, we write the output code into the respective files. To do so, we assign the directory automatically if the option has been delcared, otherwise, we create the output directory if not already created:
 ```python file markion.py
+[[ include auto_dir ]]
 if not os.path.exists(args.out_dir):
     os.mkdirs(args.out_dir)
 ```
