@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.5
 # Copyright (C) 2019 Oscar Benedito
 #
 # This file is part of Git Backup.
