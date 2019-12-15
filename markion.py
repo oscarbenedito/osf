@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 # Copyright (C) 2019 Oscar Benedito
 #
 # This file is part of Markion.

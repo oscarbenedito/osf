@@ -21,7 +21,7 @@ In order to run the program, you will need Python version 3.6 or later.
 To run the program, execute the file `markion.py` followed by the input file.
 
 ```
-python3.6 markion.py file
+python3 markion.py file
 ```
 
 There is an addition option `--output-directory` (or `-d`) to specify an output directory and you can also run the program with `--help` (or `-h`) to get help about the program's usage.
@@ -29,7 +29,7 @@ There is an addition option `--output-directory` (or `-d`) to specify an output 
 ## Explanation of the program
 First of all, we will make it executable, we'll write the license notice and import all the required libraries.
 ```python file markion.py
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 [[ include license ]]
 import os, sys, re, argparse
 ```
