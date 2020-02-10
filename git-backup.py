@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.5
+#!/usr/bin/env python3
 # Copyright (C) 2019 Oscar Benedito
 #
 # This file is part of Git Backup.
@@ -17,29 +17,36 @@
 # along with Git Backup.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
-import urllib.request
+import requests
 import json
 import datetime
 import git
+
+
+def get_repositories_data_gitlab(url, page):
+    response = requests.get(url + '&page=' + str(page))
+    return response.json()
+
+
+def get_repositories_data_github(url, token, page):
+    headers = {'Authorization': 'token ' + token}
+    response = requests.get(url + '?page=' + str(page), headers=headers)
+    return response.json()
+
 
 backup_data = {}
 backup_data['time'] = str(datetime.datetime.now())
 backup_data['sites'] = {}
 
-tokens_file = open('tokens.json')
-tokens = json.load(tokens_file)
-tokens_file.close()
+with open('tokens.json', 'r') as tokens_file:
+    tokens = json.load(tokens_file)
 
-
-def get_repositories_data(url, page):
-    response = urllib.request.urlopen(url + '&page=' + str(page))
-    return json.loads(response.read().decode('utf-8'))
 
 # gitlab.com
 if 'gitlab.com' in tokens:
     url = 'https://gitlab.com/api/v4/projects?private_token=' + tokens['gitlab.com'] + '&per_page=100&membership=true'
     page = 1
-    repositories = get_repositories_data(url, page)
+    repositories = get_repositories_data_gitlab(url, page)
 
     backup_data['sites']['gitlab.com'] = []
     while len(repositories) != 0:
@@ -57,13 +64,13 @@ if 'gitlab.com' in tokens:
                 'ssh_url': repository['ssh_url_to_repo']
             })
         page += 1
-        repositories = get_repositories_data(url, page)
+        repositories = get_repositories_data_gitlab(url, page)
 
 # github.com
 if 'github.com' in tokens:
-    url = 'https://api.github.com/user/repos?access_token=' + tokens['github.com']
+    url = 'https://api.github.com/user/repos'
     page = 1
-    repositories = get_repositories_data(url, page)
+    repositories = get_repositories_data_github(url, tokens['github.com'], page)
 
     backup_data['sites']['github.com'] = []
     while len(repositories) != 0:
@@ -81,7 +88,7 @@ if 'github.com' in tokens:
                 'ssh_url': repository['ssh_url']
             })
         page += 1
-        repositories = get_repositories_data(url, page)
+        repositories = get_repositories_data_github(url, tokens['github.com'], page)
 
 # custom
 if os.path.exists("custom_directories.json"):
