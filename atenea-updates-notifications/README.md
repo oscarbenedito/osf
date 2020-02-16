@@ -4,7 +4,7 @@ Very simple Python script to get notified when new documents are uploaded to Ate
 
 ## License
 
-The program is licensed under the GPL v3. License is available [here](https://gitlab.com/oscarbenedito/aun/blob/master/COPYING).
+The program is licensed under the GPL v3. License is available [here](https://www.gnu.org/licenses/gpl-3.0.html).
 
 ## Authors
 
