@@ -121,7 +121,7 @@ for fn, fc in file_content.items():
 ```
 
 ## License
-The program is licensed under the GPL v3. License is available [here](https://gitlab.com/oscarbenedito/markion/blob/master/COPYING).
+The program is licensed under the GPL v3. License is available [here](https://www.gnu.org/licenses/gpl-3.0.html).
 
 In order to make sure there is no missunderstanding, we will include the following license notice on our file.
 ```python block license
