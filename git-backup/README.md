@@ -53,7 +53,7 @@ You can add more than one object to the array and it will backup all of the repo
 
 ## License
 
-The program is licensed under the GPL v3. License is available [here](https://gitlab.com/oscarbenedito/git-backup/blob/master/COPYING).
+The program is licensed under the GPL v3. License is available [here](https://www.gnu.org/licenses/gpl-3.0.html).
 
 ## Author
 
