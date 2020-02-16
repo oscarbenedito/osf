@@ -4,7 +4,7 @@ This repository gathers some of the scripts I use.
 
 ## License
 
-Unless otherwise stated, the scripts are licensed under the GPL v3. License is available [here](https://www.gnu.org/licenses/gpl-3.0.html).
+Unless otherwise stated, the scripts are licensed under the GNU General Public License version 3 (available [here](https://www.gnu.org/licenses/gpl-3.0.html)).
 
 ## Author
 

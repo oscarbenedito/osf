@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 # Copyright (C) 2020 Oscar Benedito, Ernesto Lanchares, Ferran López
 #
 # This file is part of Atenea Updates Notifications (AUN).

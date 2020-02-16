@@ -4,8 +4,8 @@ This scripts create different outputs for GoAccess to check statistics on a give
 
 ## License
 
-The program is licensed under the GPL v3. License is available [here](https://www.gnu.org/licenses/gpl-3.0.html).
+The program is licensed under the GNU General Public License version 3 (available [here](https://www.gnu.org/licenses/gpl-3.0.html)).
 
 ## Author
 
- - **Oscar Benedito** - oscar@obenedito.org
+- **Oscar Benedito** - oscar@obenedito.org
