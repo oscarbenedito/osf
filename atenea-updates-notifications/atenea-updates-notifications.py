@@ -22,7 +22,7 @@ import json
 import time
 
 
-NOTIFICATION_DOMAIN = 'gotify.obenedito.org'
+NOTIFICATION_DOMAIN = 'gotify.oscarbenedito.com'
 TIME_INTERVAL = 120
 COURSE_IDS = {
     55144: "EDOS",

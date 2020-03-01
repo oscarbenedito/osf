@@ -18,14 +18,14 @@
 
 # Script to deploy a website built with Hugo.
 
-HUGO_PATH="/srv/obenedito.org"
+HUGO_PATH="/srv/oscarbenedito.com"
 
-git -C /srv/obenedito.org pull
+git -C $HUGO_PATH pull
 rm -rf $HUGO_PATH/public
 rm -rf $HUGO_PATH/resources
 hugo -s $HUGO_PATH --minify
 
-DOMAIN=gotify.obenedito.org
+DOMAIN=gotify.oscarbenedito.com
 API_TOKEN=<redacted>
 TITLE="Web update triggered"
 MESSAGE="Git hooks triggered an update of the website."

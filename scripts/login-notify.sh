@@ -18,7 +18,7 @@
 
 # Script that notifies Gotify when someone logs in through SSH to a computer/server.
 
-DOMAIN=gotify.obenedito.org
+DOMAIN=gotify.oscarbenedito.com
 API_TOKEN=<redacted>
 
 if [ "$PAM_TYPE" != "close_session" ]; then
