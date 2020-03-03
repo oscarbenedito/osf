@@ -30,10 +30,10 @@ COURSE_IDS = {
 }
 
 
-with open('api_token.txt', 'r') as f:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'api_token.txt'), 'r') as f:
     API_TOKEN = f.read().strip()
 
-with open('notification_token.txt', 'r') as f:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'notification_token.txt'), 'r') as f:
     NOTIFICATION_TOKEN = f.read().strip()
 
 

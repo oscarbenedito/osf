@@ -19,18 +19,18 @@
 # Script to deploy a website built with Hugo.
 
 HUGO_PATH="/srv/oscarbenedito.com"
+GOTIFY_DOMAIN="gotify.oscarbenedito.com"
 
 git -C $HUGO_PATH pull
 rm -rf $HUGO_PATH/public
 rm -rf $HUGO_PATH/resources
-hugo -s $HUGO_PATH --minify
+hugo -s $HUGO_PATH --gc
 
-DOMAIN=gotify.oscarbenedito.com
-API_TOKEN=<redacted>
+API_TOKEN="$(cat "$(dirname "$(realpath "$0")")/website_api_token.txt")"
 TITLE="Web update triggered"
 MESSAGE="Git hooks triggered an update of the website."
 
-curl -X POST "https://$DOMAIN/message?token=$API_TOKEN" \
+curl -X POST "https://$GOTIFY_DOMAIN/message?token=$API_TOKEN" \
   -F "title=$TITLE" \
   -F "message=$MESSAGE" \
   -F "priority=5" \

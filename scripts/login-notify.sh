@@ -18,15 +18,16 @@
 
 # Script that notifies Gotify when someone logs in through SSH to a computer/server.
 
-DOMAIN=gotify.oscarbenedito.com
-API_TOKEN=<redacted>
+GOTIFY_DOMAIN="gotify.oscarbenedito.com"
+
+API_TOKEN="$(cat "$(dirname "$(realpath "$0")")/login_api_token.txt")"
 
 if [ "$PAM_TYPE" != "close_session" ]; then
   TITLE="SSH login: ${PAM_USER}@$(hostname)"
   MESSAGE="IP: ${PAM_RHOST}
 Date: $(TZ='Europe/Madrid' date)"
 
-  curl -X POST "https://$DOMAIN/message?token=$API_TOKEN" \
+  curl -X POST "https://$GOTIFY_DOMAIN/message?token=$API_TOKEN" \
   -F "title=$TITLE" \
   -F "message=$MESSAGE" \
   -F "priority=5" \
