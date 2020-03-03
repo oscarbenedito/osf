@@ -30,7 +30,7 @@ LOGS_PREFIX="/var/log/apache2/access-obenedito.log"
 run_goaccess() {
   if [ "$#" -ge 2 ]; then
     cmd="goaccess $1 -o $2"
-    cmd="${cmd} --log-format=COMBINED --static-file={.js,.css,.ico,.svg,.png}"
+    cmd="${cmd} --log-format=COMBINED --static-file=.js --static-file=.css --static-file=.ico --static-file=.svg --static-file=.png"
     if [ "$#" -ge 3 ]; then
       cmd="${cmd} --db-path=$3"
     fi
@@ -44,7 +44,7 @@ run_goaccess() {
         cmd="${cmd} --keep-db-files"
       fi
     fi
-    $cmd
+    eval $cmd
   else
     exit 1
   fi
