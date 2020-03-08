@@ -20,13 +20,15 @@
 
 HUGO_PATH="/srv/oscarbenedito.com"
 GOTIFY_DOMAIN="gotify.oscarbenedito.com"
+FILE_DIR="$(dirname "$(realpath "$0")")"
 
 git -C $HUGO_PATH pull
 rm -rf $HUGO_PATH/public
 rm -rf $HUGO_PATH/resources
 hugo -s $HUGO_PATH --gc
+$FILE_DIR/post-hugo-script.py $FILE_DIR/post_hugo_script.json
 
-API_TOKEN="$(cat "$(dirname "$(realpath "$0")")/website_api_token.txt")"
+API_TOKEN="$(cat "$FILE_DIR/website_api_token.txt")"
 TITLE="Web update triggered"
 MESSAGE="Git hooks triggered an update of the website."
 
