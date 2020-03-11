@@ -10,6 +10,6 @@ The program is licensed under the GNU General Public License version 3 (availabl
 
 Alphabetically by last name.
 
-- **Oscar Benedito** - oscar@obenedito.org
+- **Oscar Benedito** - oscar@oscarbenedito.com
 - **Ernesto Lanchares** - e.lancha98@gmail.com
 - **Ferran López** - flg@tuta.io

@@ -8,6 +8,6 @@ Unless otherwise stated, the scripts are licensed under the GNU General Public L
 
 ## Author
 
-- **Oscar Benedito** - oscar@obenedito.org
+- **Oscar Benedito** - oscar@oscarbenedito.com
 
 *Note*: For some scripts, I have had help from other people. Co-authors are clearly stated on those files.
