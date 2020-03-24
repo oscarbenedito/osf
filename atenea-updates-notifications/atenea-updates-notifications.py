@@ -22,19 +22,15 @@ import json
 import time
 
 
-NOTIFICATION_DOMAIN = 'gotify.oscarbenedito.com'
-TIME_INTERVAL = 120
-COURSE_IDS = {
-    55144: "EDOS",
-    55145: "TP"
-}
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.json'), 'r') as f:
+    CONFIG = json.load(f)
 
 
-with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'api_token.txt'), 'r') as f:
-    API_TOKEN = f.read().strip()
-
-with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'notification_token.txt'), 'r') as f:
-    NOTIFICATION_TOKEN = f.read().strip()
+NOTIFICATION_DOMAIN = CONFIG['notification_domain']
+TIME_INTERVAL = CONFIG['time_interval']
+COURSE_IDS = CONFIG['course_ids']
+API_TOKEN = CONFIG['api_token']
+NOTIFICATION_TOKEN = CONFIG['notification_token']
 
 
 def get_updates(id):
@@ -67,13 +63,17 @@ def find_document(docs, doc_id):
 
 
 def send_notification(doc, course_name):
+    if doc['modname'] == 'resource':
+        message = 'URL: ' + doc['contents'][0]['fileurl'] + '&token=' + API_TOKEN
+    else:
+        message = doc['modplural']
+
     data = {
         'title': course_name + ': ' + doc['name'],
-        'message': 'URL: ' + doc['contents'][0]['fileurl'] + '&token=' + API_TOKEN,
+        'message': message,
         'priority': 5
     }
     requests.post('https://' + NOTIFICATION_DOMAIN + '/message?token=' + NOTIFICATION_TOKEN, data = data)
-
 
 for id, course_name in COURSE_IDS.items():
     updates = get_updates(id)
@@ -83,6 +83,4 @@ for id, course_name in COURSE_IDS.items():
 
     for update in updates:
         doc = find_document(course_docs.json(), update['id'])
-
-        if doc['modname'] == 'resource':
-            send_notification(doc, course_name)
+        send_notification(doc, course_name)
