@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Check number of params
+[ $# -ne 2 ] && echo "Usage: owner <project.git> <owner>" && exit 1
+
+# Set the project name, adding .git if necessary
+p=$(echo "$1" | sed 's/\.git$\|$/.git/i')
+
+[ ! -d "$p" ] && echo "$p not found."
+
+echo "$2" > "$p/owner"

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Check number of params
+[ $# -ne 1 ] && echo "Usage: make-public <project.git>" && exit 1
+
+# Set the project name, adding .git if necessary
+p=$(echo "$1" | sed 's/\.git$\|$/.git/i')
+
+[ ! -d "$p" ] && echo "$p not found."
+
+[ -f "$p/git-daemon-export-ok" ] && echo "$p is already public." && exit
+touch "$p/git-daemon-export-ok" && echo "$p is now public."

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Check number of params
+[ $# -ne 1 ] && echo "Usage: init <project.git>" && exit 1
+
+# Set the project name, adding .git if necessary
+p=$(echo "$1" | sed 's/\.git$\|$/.git/i')
+
+# Create and initialise the project
+mkdir "$p" && \
+  cd "$p" && \
+  git --bare init
+ln -sf "/usr/local/share/doc/stagit/example_post-receive.sh" "hooks/post-receive"
+
+echo "Oscar Benedito" > "owner"
+echo "git://git.oscarbenedito.com/${p%.git}" > "url"
+echo "${p%.git}" > "description"
