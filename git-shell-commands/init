@@ -11,6 +11,7 @@ mkdir "$p" && \
   cd "$p" && \
   git --bare init
 ln -sf "/usr/local/share/doc/stagit/example_post-receive.sh" "hooks/post-receive"
+ln -sf "hooks/post-update.sample" "hooks/post-update"
 
 echo "Oscar Benedito" > "owner"
 echo "git://git.oscarbenedito.com/${p%.git}" > "url"
