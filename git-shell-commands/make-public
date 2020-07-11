@@ -1,12 +1,50 @@
 #!/bin/sh
 
+# path must be absolute
+reposdir="/srv/git"
+webdir="/srv/git/html"
+defaultdir="/usr/local/share/doc/stagit"
+
 # Check number of params
 [ $# -ne 1 ] && echo "Usage: make-public <project.git>" && exit 1
 
 # Set the project name, adding .git if necessary
-p=$(echo "$1" | sed 's/\.git$\|$/.git/i')
+dir=$(echo "$1" | sed 's/\.git$\|$/.git/i')
 
-[ ! -d "$p" ] && echo "$p not found."
+[ ! -d "$dir" ] && echo "$dir not found."
 
-[ -f "$p/git-daemon-export-ok" ] && echo "$p is already public." && exit
-touch "$p/git-daemon-export-ok" && echo "$p is now public."
+[ -f "$dir/git-daemon-export-ok" ] && echo "$dir is already public." && exit
+
+touch "$dir/git-daemon-export-ok"
+git -C "$dir" update-server-info
+
+mkdir -p "$webdir" || exit 1
+
+# set assets if not already there
+ln -s "$defaultdir/style.css" "$webdir/style.css" 2> /dev/null
+ln -s "$defaultdir/logo.png" "$webdir/logo.png" 2> /dev/null
+ln -s "$defaultdir/favicon.ico" "$webdir/favicon.ico" 2> /dev/null
+
+# strip .git suffix
+r=$(basename "$dir")
+d=$(basename "$dir" ".git")
+printf "%s... " "$d"
+
+mkdir -p "$webdir/$d"
+cd "$webdir/$d" || continue
+stagit -c ".stagit-build-cache" "$reposdir/$r"
+
+# symlinks
+ln -sf log.html index.html
+ln -sf "$reposdir/$r" ".git"
+
+echo "done"
+
+# make index
+repos=""
+for d in "$reposdir/"*.git/; do
+    [ -f "$d/git-daemon-export-ok" ] && repos="$repos $d"
+done
+echo "$repos" | xargs stagit-index > "$webdir/index.html"
+
+echo "$dir is now public."

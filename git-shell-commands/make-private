@@ -1,12 +1,27 @@
 #!/bin/sh
 
+# path must be absolute
+reposdir="/srv/git"
+webdir="/srv/git/html"
+
 # Check number of params
 [ $# -ne 1 ] && echo "Usage: make-private <project.git>" && exit 1
 
 # Set the project name, adding .git if necessary
-p=$(echo "$1" | sed 's/\.git$\|$/.git/i')
+dir="$(echo "$1" | sed 's/\.git$\|$/.git/i')"
+web="/srv/git/html/$(basename "$dir" ".git")"
 
-[ ! -d "$p" ] && echo "$p not found."
+[ ! -d "$dir" ] && echo "$dir not found."
 
-[ ! -f "$p/git-daemon-export-ok" ] && echo "$p is already private." && exit
-rm "$p/git-daemon-export-ok" && echo "$p is now private."
+[ ! -f "$dir/git-daemon-export-ok" ] && echo "$dir is already private." && exit
+
+rm "$dir/git-daemon-export-ok"
+rm -rf "$web"
+
+repos=""
+for d in "$reposdir/"*.git/; do
+    [ -f "$d/git-daemon-export-ok" ] && repos="$repos $d"
+done
+
+echo "$repos" | xargs stagit-index > "$webdir/index.html"
+echo "$dir is now private."
