@@ -22,7 +22,8 @@ HUGO_PATH="/srv/oscarbenedito.com"
 GOTIFY_DOMAIN="gotify.oscarbenedito.com"
 FILE_DIR="$(dirname "$(realpath "$0")")"
 
-git -C $HUGO_PATH pull
+git -C $HUGO_PATH fetch origin master
+git -C $HUGO_PATH reset --hard origin/master
 rm -rf $HUGO_PATH/public
 rm -rf $HUGO_PATH/resources
 hugo -s $HUGO_PATH --gc
