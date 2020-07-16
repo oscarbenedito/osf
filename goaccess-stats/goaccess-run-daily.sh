@@ -18,7 +18,7 @@
 
 OUT_DIR="/srv/stats"
 DB_DIR="/srv/goaccess-db"
-LOGS_PREFIX="/var/log/apache2/access-obenedito.log"
+LOGS_PREFIX="/var/log/apache2/a-website.log"
 
 # Shortcut to run GoAccess.
 # Arguments:
