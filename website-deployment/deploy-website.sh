@@ -24,6 +24,7 @@ FILE_DIR="$(dirname "$(realpath "$0")")"
 
 git -C $HUGO_PATH fetch origin master
 git -C $HUGO_PATH reset --hard origin/master
+git -C $HUGO_PATH verify-commit master || exit 1
 rm -rf $HUGO_PATH/public
 rm -rf $HUGO_PATH/resources
 hugo -s $HUGO_PATH --gc
