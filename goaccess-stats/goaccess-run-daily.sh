@@ -106,7 +106,7 @@ rm "$TMP_FILE"
 
 # Week
 TODAY="$(date +"w/%G/%V")"
-YESTERDAY="$(date --date="yesterday" +"%w/G/%V")"
+YESTERDAY="$(date --date="yesterday" +"w/%G/%V")"
 run_goaccess_time_interval "$TODAY" "$YESTERDAY"
 
 # Month
