@@ -41,7 +41,8 @@ error_message () {
 
 while IFS= read -r line
 do
-  OUTPUT="$BACKUP_PATH/$(date +"%Y-%m-%d")-${line#*	}"
+  mkdir -p "$BACKUP_PATH/${line#*	}"
+  OUTPUT="$BACKUP_PATH/${line#*	}/$(date +"%Y-%m-%d")-${line#*	}"
   URL="${line%	*}"
   save || error_message
 done < "$URL_FILE"
