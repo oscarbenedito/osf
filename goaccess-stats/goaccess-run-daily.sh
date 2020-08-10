@@ -59,25 +59,21 @@ run_goaccess_time_interval() {
   if [ "$#" -eq 2 ]; then
     DB="$DB_DIR/$1"
     FILTERED_FILE=$(mktemp)
-    grep -v ".well-known/acme-challenge" "$LOGS_PREFIX.1" > "$FILTERED_FILE"
+    filter_file "$LOGS_PREFIX.1" > "$FILTERED_FILE"
     if [ -d "$DB" ]; then
-      mkdir -p "$OUT_DIR/$1/nf"
-      run_goaccess "$FILTERED_FILE" "$OUT_DIR/$1/index.html" "$DB/f" 1 1
-      run_goaccess "$LOGS_PREFIX.1" "$OUT_DIR/$1/nf/index.html" "$DB/nf" 1 1
+      mkdir -p "$OUT_DIR/$1"
+      run_goaccess "$FILTERED_FILE" "$OUT_DIR/$1/index.html" "$DB" 1 1
     else
-      mkdir -p "$DB/f"
-      mkdir -p "$DB/nf"
-      mkdir -p "$OUT_DIR/$1/nf"
-      run_goaccess "$FILTERED_FILE" "$OUT_DIR/$1/index.html" "$DB/f" 0 1
-      run_goaccess "$LOGS_PREFIX.1" "$OUT_DIR/$1/nf/index.html" "$DB/nf" 0 1
+      mkdir -p "$DB"
+      mkdir -p "$OUT_DIR/$1"
+      run_goaccess "$FILTERED_FILE" "$OUT_DIR/$1/index.html" "$DB" 0 1
     fi
 
     if [ "$1" != "$2" ]; then
       DB="$DB_DIR/$2"
       if [ -d "$DB" ]; then
         mkdir -p "$OUT_DIR/$2"
-        run_goaccess "$FILTERED_FILE" "$OUT_DIR/$2/index.html" "$DB/f" 1 0
-        run_goaccess "$LOGS_PREFIX.1" "$OUT_DIR/$2/nf/index.html" "$DB/nf" 1 0
+        run_goaccess "$FILTERED_FILE" "$OUT_DIR/$2/index.html" "$DB" 1 0
         rm -rf "$DB"
       fi
     fi
@@ -87,8 +83,13 @@ run_goaccess_time_interval() {
   fi
 }
 
+filter_file() {
+  grep -v ".well-known/acme-challenge" "$1"
+}
+
 # Day
 TMP_FILE=$(mktemp)
+TMP_FILE2=$(mktemp)
 LOGS_2=$(mktemp)
 OUT_DIR_TODAY="$OUT_DIR/$(date --date="yesterday" +"d/%Y/%m/%d")"
 
@@ -96,13 +97,10 @@ cp "$LOGS_PREFIX.2.gz" "$LOGS_2.gz"
 gunzip -f "$LOGS_2.gz"
 
 mkdir -p "$OUT_DIR_TODAY"
-cat "$LOGS_2" "$LOGS_PREFIX.1" | grep -v ".well-known/acme-challenge" > "$TMP_FILE"
-run_goaccess "$TMP_FILE" "$OUT_DIR_TODAY/index.html"
-
-mkdir -p "$OUT_DIR_TODAY/nf"
 cat "$LOGS_2" "$LOGS_PREFIX.1" > "$TMP_FILE"
-run_goaccess "$TMP_FILE" "$OUT_DIR_TODAY/nf/index.html"
-rm "$TMP_FILE"
+filter_file "$TMP_FILE" > "$TMP_FILE2"
+run_goaccess "$TMP_FILE2" "$OUT_DIR_TODAY/index.html"
+rm "$TMP_FILE" "$TMP_FILE2" "$LOGS_2"
 
 # Week
 TODAY="$(date +"w/%G/%V")"
