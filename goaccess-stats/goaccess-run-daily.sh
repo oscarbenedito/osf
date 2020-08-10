@@ -36,12 +36,12 @@ run_goaccess() {
     fi
     if [ "$#" -ge 4 ]; then
       if [ "$4" -eq 1 ]; then
-        cmd="${cmd} --load-from-disk"
+        cmd="${cmd} --restore"
       fi
     fi
     if [ "$#" -ge 5 ]; then
       if [ "$5" -eq 1 ]; then
-        cmd="${cmd} --keep-db-files"
+        cmd="${cmd} --persist"
       fi
     fi
     eval $cmd
@@ -62,13 +62,13 @@ run_goaccess_time_interval() {
     grep -v ".well-known/acme-challenge" "$LOGS_PREFIX.1" > "$FILTERED_FILE"
     if [ -d "$DB" ]; then
       mkdir -p "$OUT_DIR/$1/nf"
-      run_goaccess "$FILTERED_FILE" "$OUT_DIR/$1/index.html" "$DB" 1 1
+      run_goaccess "$FILTERED_FILE" "$OUT_DIR/$1/index.html" "$DB/f" 1 1
       run_goaccess "$LOGS_PREFIX.1" "$OUT_DIR/$1/nf/index.html" "$DB/nf" 1 1
     else
       mkdir -p "$DB/f"
       mkdir -p "$DB/nf"
       mkdir -p "$OUT_DIR/$1/nf"
-      run_goaccess "$FILTERED_FILE" "$OUT_DIR/$1/index.html" "$DB" 0 1
+      run_goaccess "$FILTERED_FILE" "$OUT_DIR/$1/index.html" "$DB/f" 0 1
       run_goaccess "$LOGS_PREFIX.1" "$OUT_DIR/$1/nf/index.html" "$DB/nf" 0 1
     fi
 
@@ -76,7 +76,7 @@ run_goaccess_time_interval() {
       DB="$DB_DIR/$2"
       if [ -d "$DB" ]; then
         mkdir -p "$OUT_DIR/$2"
-        run_goaccess "$FILTERED_FILE" "$OUT_DIR/$2/index.html" "$DB" 1 0
+        run_goaccess "$FILTERED_FILE" "$OUT_DIR/$2/index.html" "$DB/f" 1 0
         run_goaccess "$LOGS_PREFIX.1" "$OUT_DIR/$2/nf/index.html" "$DB/nf" 1 0
         rm -rf "$DB"
       fi
