@@ -18,7 +18,8 @@
 
 # Script to deploy a website built with Hugo.
 
-HUGO_PATH="/srv/oscarbenedito.com"
+HUGO_PATH="/root/oscarbenedito.com"
+WEB_PATH="/srv/oscarbenedito.com"
 GOTIFY_DOMAIN="gotify.oscarbenedito.com"
 FILE_DIR="$(dirname "$(realpath "$0")")"
 
@@ -28,7 +29,8 @@ git -C $HUGO_PATH verify-commit master || exit 1
 rm -rf $HUGO_PATH/public
 rm -rf $HUGO_PATH/resources
 hugo -s $HUGO_PATH --gc
-$FILE_DIR/post-hugo-script.py $FILE_DIR/post_hugo_script.json
+$FILE_DIR/post-hugo-script.py "$FILE_DIR/post_hugo_script.json"
+rsync --perms --recursive --checksum --delete "$HUGO_PATH/public/" "$WEB_PATH"
 
 API_TOKEN="$(cat "$FILE_DIR/website_api_token.txt")"
 TITLE="Web update triggered"

@@ -22,7 +22,7 @@ import re
 import json
 import shutil
 
-HUGO_OUT_DIR = '/srv/oscarbenedito.com/public'
+HUGO_OUT_DIR = '/root/oscarbenedito.com/public'
 
 if len(sys.argv) != 2:
     print("Usage:\n", sys.argv[0], "file.json")
