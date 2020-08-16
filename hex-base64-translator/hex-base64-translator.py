@@ -17,6 +17,7 @@
 import sys
 from getpass import getpass
 
+
 def char_to_bits(c):
     n = ord(c)
     if n >= 65 and n <= 90:
@@ -31,6 +32,7 @@ def char_to_bits(c):
         return bin(63)[2:].zfill(6)
     else:
         sys.exit('Error, ' + c + ' is not a Base64 character.', file=sys.stderr)
+
 
 def bits_to_char(s):
     n = int(s, 2)
@@ -47,6 +49,7 @@ def bits_to_char(s):
     else:
         sys.exit('Error, ' + s + ' (' + str(n) + ') is not a binary number lower than 64.', file=sys.stderr)
 
+
 def base64_to_hex(s):
     if len(s) % 2:
         print('WARNING: Number of Base64 characters is not multiple of 2. Adding zeros to string.', file=sys.stderr)
@@ -61,6 +64,7 @@ def base64_to_hex(s):
         s = s[2:]
 
     return ret
+
 
 def hex_to_base64(s):
     if len(s) % 3:
@@ -77,26 +81,27 @@ def hex_to_base64(s):
     return ret
 
 
-if len(sys.argv) != 2 or (sys.argv[1] != 'base64-to-hex' and sys.argv[1] != 'hex-to-base64'):
-    sys.exit('Usage: ' + sys.argv[0] + ' base64-to-hex | hex-to-base64.')
+if __name__ == '__main__':
+    if len(sys.argv) != 2 or (sys.argv[1] != 'base64-to-hex' and sys.argv[1] != 'hex-to-base64'):
+        sys.exit('Usage: ' + sys.argv[0] + ' base64-to-hex | hex-to-base64.')
 
-if sys.argv[1] == 'base64-to-hex':
-    inp = getpass(prompt = 'Base64 secret: ')
-    print('')
-    out = base64_to_hex(inp)
-    print('-'*80)
-    print('Secret in hexadecimal:', out)
-    print('-'*80)
+    if sys.argv[1] == 'base64-to-hex':
+        inp = getpass(prompt = 'Base64 secret: ')
+        print('')
+        out = base64_to_hex(inp)
+        print('-'*80)
+        print('Secret in hexadecimal:', out)
+        print('-'*80)
 
-elif sys.argv[1] == 'hex-to-base64':
-    inp = getpass(prompt = 'Hexadecimal secret: ')
-    print('')
-    out = hex_to_base64(inp)
-    print('-'*80)
-    print('Secret in Base64:', out)
-    print('-'*80)
-    if inp[0] == '0' and len(inp) % 2 == 0:
-        out = hex_to_base64(inp[1:])
+    elif sys.argv[1] == 'hex-to-base64':
+        inp = getpass(prompt = 'Hexadecimal secret: ')
+        print('')
+        out = hex_to_base64(inp)
         print('-'*80)
-        print('Due to SSSS having an output with an even number of characters, your secret could be:', out)
+        print('Secret in Base64:', out)
         print('-'*80)
+        if inp[0] == '0' and len(inp) % 2 == 0:
+            out = hex_to_base64(inp[1:])
+            print('-'*80)
+            print('Due to SSSS having an output with an even number of characters, your secret could be:', out)
+            print('-'*80)
