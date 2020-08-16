@@ -22,8 +22,8 @@ The `.json` file with the configuration looks like the following:
 
 ## License
 
-The program is licensed under the GNU General Public License version 3
-(available [here][gpl]).
+The program is licensed under the GNU Affero General Public License version 3 or
+later (available [here][agpl]).
 
 ## Authors
 
@@ -33,4 +33,4 @@ Alphabetically by last name.
 - **Ernesto Lanchares** - e.lancha98@gmail.com
 - **Ferran López** - flg@tuta.io
 
-[gpl]: <https://www.gnu.org/licenses/gpl-3.0.html> "The GNU General Public License v3.0"
+[agpl]: <https://www.gnu.org/licenses/agpl-3.0.html> "The GNU General Public License v3.0"
