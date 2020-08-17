@@ -19,8 +19,7 @@
 # adding a date to the filename.
 
 FILE_DIR="$(dirname "$(realpath "$0")")"
-GOTIFY_DOMAIN="gotify.oscarbenedito.com"
-API_TOKEN="$(cat "$FILE_DIR/gotify_token.txt")"
+. "$FILE_DIR/notify.sh"
 URL_FILE="$FILE_DIR/urls.txt"
 BACKUP_PATH="$HOME/backups"
 
@@ -29,12 +28,7 @@ save() { wget --quiet --output-document "$OUTPUT" "$URL" ; }
 error_message () {
   TITLE="Website backup error"
   MESSAGE="Error backing up $OUTPUT"
-
-  curl -X POST "https://$GOTIFY_DOMAIN/message?token=$API_TOKEN" \
-    -F "title=$TITLE" \
-    -F "message=$MESSAGE" \
-    -F "priority=5" \
-    >/dev/null 2>&1
+  notify "$TITLE" "$MESSAGE"
 }
 
 while IFS= read -r line

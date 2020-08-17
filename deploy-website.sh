@@ -16,10 +16,11 @@
 
 # Script to deploy a website built with Hugo.
 
+# File must implement notify funtion
+. "$(dirname "$(realpath "$0")")/notify.sh"
+
 HUGO_PATH="/root/oscarbenedito.com"
 WEB_PATH="/srv/oscarbenedito.com"
-GOTIFY_DOMAIN="gotify.oscarbenedito.com"
-FILE_DIR="$(dirname "$(realpath "$0")")"
 
 # Pull rewritting history if needed, check that commit is PGP signed by a known
 # key and if so, rebuild the website
@@ -53,12 +54,6 @@ sed -i "/<url>/{:a;N;/<\/url>/!ba};N;/<loc>https:\/\/oscarbenedito\.com${path}<\
 rsync --perms --recursive --checksum --delete "$HUGO_PATH/public/" "$WEB_PATH"
 
 # Notify
-API_TOKEN="$(cat "$FILE_DIR/gotify_token.txt")"
 TITLE="Web update triggered"
 MESSAGE="Git hooks triggered an update of the website."
-
-curl -X POST "https://$GOTIFY_DOMAIN/message?token=$API_TOKEN" \
-  -F "title=$TITLE" \
-  -F "message=$MESSAGE" \
-  -F "priority=5" \
-  >/dev/null 2>&1
+notify "$TITLE" "$MESSAGE"

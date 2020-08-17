@@ -16,22 +16,16 @@
 
 # Script that notifies through Gotify when a website has changed.
 
-GOTIFY_DOMAIN="gotify.oscarbenedito.com"
-API_TOKEN="$(cat "$(dirname "$(realpath "$0")")/gotify_token.txt")"
+# File must implement notify funtion
+. "$(dirname "$(realpath "$0")")/notify.sh"
 
-check_and_send_message() {
+check_and_notify() {
   newhash="$(curl "$URL" 2>/dev/null | sha256sum | cut -f 1 -d " ")"
-  [ "$HASH" != "$newhash" ] && \
-    curl -X POST "https://$GOTIFY_DOMAIN/message?token=$API_TOKEN" \
-      -F "title=$TITLE" \
-      -F "message=$URL" \
-      -F "priority=5" \
-      >/dev/null 2>&1
+  [ "$HASH" != "$newhash" ] && notify "$TITLE" "$URL"
 }
 
-
+# Example usage:
 HASH="<hash>"
 URL="<url>"
 TITLE="<title>"
-
-check_and_send_message
+check_and_notify
