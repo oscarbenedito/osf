@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Copyright (C) 2020 Oscar Benedito
+# Copyright (C) 2020 Oscar Benedito <oscar@oscarbenedito.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -20,7 +20,7 @@
 
 FILE_DIR="$(dirname "$(realpath "$0")")"
 GOTIFY_DOMAIN="gotify.oscarbenedito.com"
-API_TOKEN="$(cat "$FILE_DIR/website_api_token.txt")"
+API_TOKEN="$(cat "$FILE_DIR/gotify_token.txt")"
 URL_FILE="$FILE_DIR/urls.txt"
 BACKUP_PATH="$HOME/backups"
 

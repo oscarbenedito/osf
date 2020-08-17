@@ -1,5 +1,5 @@
-#!/bin/sh
-# Copyright (C) 2020 Oscar Benedito
+#!/usr/bin/env sh
+# Copyright (C) 2020 Oscar Benedito <oscar@oscarbenedito.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -14,25 +14,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Script that notifies through Gotify when a website has changed.
-
+# Script that notifies Gotify when someone logs in through SSH to a computer/server.
 
 GOTIFY_DOMAIN="gotify.oscarbenedito.com"
-API_TOKEN="<redacted>"
+API_TOKEN="$(cat "$(dirname "$(realpath "$0")")/gotify_token.txt")"
 
-check_and_send_message() {
-  newhash="$(curl "$URL" 2>/dev/null | sha256sum | cut -f 1 -d " ")"
-  [ "$HASH" != "$newhash" ] && \
-    curl -X POST "https://$GOTIFY_DOMAIN/message?token=$API_TOKEN" \
-      -F "title=$TITLE" \
-      -F "message=$URL" \
-      -F "priority=5" \
-      >/dev/null 2>&1
-}
+if [ "$PAM_TYPE" != "close_session" ]; then
+  TITLE="SSH login: ${PAM_USER}@$(hostname)"
+  MESSAGE="IP: ${PAM_RHOST}
+Date: $(TZ='Europe/Madrid' date)"
 
-
-HASH="<hash>"
-URL="<url>"
-TITLE="<title>"
-
-check_and_send_message
+  curl -X POST "https://$GOTIFY_DOMAIN/message?token=$API_TOKEN" \
+  -F "title=$TITLE" \
+  -F "message=$MESSAGE" \
+  -F "priority=5" \
+  >/dev/null 2>&1
+fi

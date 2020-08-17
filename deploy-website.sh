@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Copyright (C) 2020 Oscar Benedito
+# Copyright (C) 2020 Oscar Benedito <oscar@oscarbenedito.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -30,7 +30,7 @@ hugo -s $HUGO_PATH --gc
 $FILE_DIR/post-hugo-script.py "$FILE_DIR/post_hugo_script.json"
 rsync --perms --recursive --checksum --delete "$HUGO_PATH/public/" "$WEB_PATH"
 
-API_TOKEN="$(cat "$FILE_DIR/website_api_token.txt")"
+API_TOKEN="$(cat "$FILE_DIR/gotify_token.txt")"
 TITLE="Web update triggered"
 MESSAGE="Git hooks triggered an update of the website."
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (C) 2020 Oscar Benedito
+# Copyright (C) 2020 Oscar Benedito <oscar@oscarbenedito.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -13,6 +13,22 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# This script simply translates hexadecimal strings into Base64 strings (by
+# converting them into bits and then reading the bits as Base64) and the inverse
+# process.
+#
+# The goal of this program is make a password containing only characters in the
+# Base64 alphabet and then being able to split the secret between different
+# parties using ssss (<http://point-at-infinity.org/ssss/>) with the hexadecimal
+# option. With this, an attacker can't get any advantage by discarding unvalid
+# answers, since they are all valid (when running the program normally, you can
+# get "binary" secrets or "ASCII" secrets).
+#
+# All this trouble is due to the fact that I am not sure if there is a way for
+# an attacker with some shares of the secret to avoid making a brute-force
+# attack by knowing the implementation of ssss and anticipate binary (and
+# therefore invalid) results.
 
 import sys
 from getpass import getpass

@@ -17,6 +17,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# Get notified when new documents are uploaded to Atenea (an instance of
+# Moodle). Makes use of a Gotify server.
+#
+# The script assumes there is a file name "aun_config.json" with the
+# configuration. Example:
+#
+#     {
+#       "notification_domain": "<gotify-domain>",
+#       "time_interval": 120,
+#       "api_token": "<moodle-api-token>",
+#       "notification_token": "<gotify-token>",
+#       "course_ids": {
+#         "56145": "GD",
+#         "56152": "EDPS"
+#       }
+#     }
+
 
 import os
 import requests
@@ -24,7 +41,7 @@ import json
 import time
 
 
-with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.json'), 'r') as f:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'aun_config.json'), 'r') as f:
     CONFIG = json.load(f)
 
 
