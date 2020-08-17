@@ -24,12 +24,12 @@ WEB_PATH="/srv/oscarbenedito.com"
 
 # Pull rewritting history if needed, check that commit is PGP signed by a known
 # key and if so, rebuild the website
-git -C $HUGO_PATH fetch origin master
-git -C $HUGO_PATH reset --hard origin/master
-git -C $HUGO_PATH verify-commit master || exit 1
-rm -rf $HUGO_PATH/public
-rm -rf $HUGO_PATH/resources
-hugo -s $HUGO_PATH --gc
+git -C "$HUGO_PATH" fetch origin master
+git -C "$HUGO_PATH" reset --hard origin/master
+git -C "$HUGO_PATH" verify-commit master || exit 1
+rm -rf "$HUGO_PATH/public"
+rm -rf "$HUGO_PATH/resources"
+hugo -s "$HUGO_PATH" --gc
 
 # Edit Hugo output: delete unwanted files (also from sitemap)
 rm -rf "$HUGO_PATH/public/licenses/page/"

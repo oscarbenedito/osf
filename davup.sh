@@ -17,7 +17,7 @@
 
 # Back up calendars and contacts from a DAV server (CalDAV and CardDAV).
 
-domain="<DAV server domain"     # example: https://dav.mailbox.org
+domain="<DAV server domain"     # example: https://dav.mailbox.org (no trailing "/")
 user="<username>"
 pass="<password>"
 

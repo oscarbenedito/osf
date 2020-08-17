@@ -31,10 +31,10 @@ error_message () {
   notify "$TITLE" "$MESSAGE"
 }
 
-while IFS= read -r line
+while read -r url file
 do
-  mkdir -p "$BACKUP_PATH/${line#*	}"
-  OUTPUT="$BACKUP_PATH/${line#*	}/$(date +"%Y-%m-%d")-${line#*	}"
-  URL="${line%	*}"
+  mkdir -p "$BACKUP_PATH/${file}"
+  OUTPUT="$BACKUP_PATH/${file}/$(date +"%Y-%m-%d")-${file}"
+  URL="${url}"
   save || error_message
 done < "$URL_FILE"
