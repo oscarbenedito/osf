@@ -17,7 +17,7 @@
 
 # Back up calendars and contacts from a DAV server (CalDAV and CardDAV).
 
-domain="<DAV server domain"     # example: https://dav.mailbox.org (no trailing "/")
+domain="<DAV server address>"       # example: https://dav.mailbox.org (no trailing "/")
 user="<username>"
 pass="<password>"
 
@@ -70,6 +70,6 @@ process_card() {
     done
 }
 
-# examples
+# examples (resource address will be "${domain}/${resource}"
 resource="caldav/mycal" && get_cal | process_cal > calendar_and_todos.ics
 resource="carddav/mycard" && get_card | process_card > contacts.vcf
