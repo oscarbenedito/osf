@@ -23,18 +23,21 @@ FILE_DIR="$(dirname "$(realpath "$0")")"
 URL_FILE="$FILE_DIR/urls.txt"
 BACKUP_PATH="$HOME/backups"
 
-save() { wget --quiet --output-document "$OUTPUT" "$URL" ; }
+save() { curl -s -X GET -H "X-Auth-Token: $token" "$url" > "$output" ; }
+
+delete_duplicates() { cmp -s "$output" "$last" && rm "$last" ; }
 
 error_message () {
   TITLE="Website backup error"
-  MESSAGE="Error backing up $OUTPUT"
+  MESSAGE="Error backing up $file"
   notify "$TITLE" "$MESSAGE"
 }
 
-while read -r url file
+while read -r url file token
 do
-  mkdir -p "$BACKUP_PATH/${file}"
-  OUTPUT="$BACKUP_PATH/${file}/$(date +"%Y-%m-%d")-${file}"
-  URL="${url}"
+  mkdir -p "$BACKUP_PATH/$file"
+  output="$BACKUP_PATH/$file/$(date +"%Y-%m-%d")-$file"
+  last="$BACKUP_PATH/$file/$(date --date="yesterday" +"%Y-%m-%d")-$file"
   save || error_message
+  delete_duplicates
 done < "$URL_FILE"
