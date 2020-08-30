@@ -19,7 +19,7 @@
 # File must implement notify funtion
 . "$(dirname "$(realpath "$0")")/notify.sh"
 
-HUGO_PATH="/root/oscarbenedito.com"
+HUGO_PATH="/root/.local/share/scripts/deploy-website/oscarbenedito.com"
 WEB_PATH="/srv/oscarbenedito.com"
 
 # Pull rewritting history if needed, check that commit is PGP signed by a known
