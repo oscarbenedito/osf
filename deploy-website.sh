@@ -20,38 +20,8 @@
 . "$(dirname "$(realpath "$0")")/notify.sh"
 
 HUGO_PATH="/root/.local/share/scripts/deploy-website/oscarbenedito.com"
-WEB_PATH="/srv/oscarbenedito.com"
 
-# Pull rewritting history if needed, check that commit is PGP signed by a known
-# key and if so, rebuild the website
-git -C "$HUGO_PATH" fetch origin master
-git -C "$HUGO_PATH" reset --hard origin/master
-git -C "$HUGO_PATH" verify-commit master || exit 1
-rm -rf "$HUGO_PATH/public"
-rm -rf "$HUGO_PATH/resources"
-hugo -s "$HUGO_PATH" --gc
-
-# Edit Hugo output: delete unwanted files (also from sitemap)
-rm -rf "$HUGO_PATH/public/licenses/page/"
-rm -f "$HUGO_PATH/public/index.xml" "$HUGO_PATH/public/licenses/index.html" \
-    "$HUGO_PATH/public/licenses/index.xml"
-path="\\/licenses\\/"
-sed -i "/<url>/{:a;N;/<\/url>/!ba};N;/<loc>https:\/\/oscarbenedito\.com${path}<\/loc>/d" \
-    "$HUGO_PATH/public/sitemap.xml"
-# Explanation of RegEx:
-# /<url>/       # find <url>
-# {             # start command declaration
-#   :a          # create label "a"
-#   N           # read next line into pattern space
-#   /<\/url>/!  # if not match </url>...
-#   ba          # goto "a"
-# }             # end command
-# N             # read next line into pattern space (the empty line on sitemap.xml)
-# /<lo....oc>/  # if pattern matches...
-# d             # delete
-
-# Sync new build to production
-rsync --perms --recursive --checksum --delete "$HUGO_PATH/public/" "$WEB_PATH"
+make -C "$HUGO_PATH" deploy || exit 1
 
 # Notify
 TITLE="Web update triggered"
