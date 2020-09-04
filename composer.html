@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!--
+  Composer by Oscar Benedito <oscar@oscarbenedito.com>
+
+  Minimalistic interface to write without distractions. It is a standalone HTML
+  file. It will save your progress as long as you don't delete browser data.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Oscar Benedito">
+    <title>Composer</title>
+    <style>
+:root {
+  --font-family: 'serif';
+  --nav-height: 3em;
+  --text-color: #000;
+  --bg-color: #fff;
+  --nav-color: hsl(0, 0%, 46%);
+}
+.toggled {
+  --text-color: hsl(0, 0%, 93%);
+  --bg-color: hsl(0, 0%, 13%);
+  --nav-color: hsl(0, 0%, 56%);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-color: hsl(0, 0%, 93%);
+    --bg-color: hsl(0, 0%, 13%);
+    --nav-color: hsl(0, 0%, 56%);
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .toggled {
+    --text-color: #000;
+    --bg-color: #fff;
+    --nav-color: hsl(0, 0%, 46%);
+  }
+}
+.mono {
+  --font-family: 'mono';
+}
+html {
+  background-color: var(--bg-color);
+}
+textarea {
+  line-height: 1.4em;
+  font-family: var(--font-family);
+  padding: 1em calc((100% - 720px)/2);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  height: calc(100% - var(--nav-height));
+  font-size: 1.2em;
+  box-sizing: border-box;
+  resize: none;
+  right: 0;
+  top: var(--nav-height);
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  position: fixed;
+  border: 0;
+  outline: 0;
+}
+nav {
+  text-align: center;
+  height: var(--nav-height);
+  line-height: var(--nav-height);
+  font-size: 1.2em;
+  opacity: 0;
+  color: var(--nav-color);
+  background-color: var(--bg-color);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+}
+nav a {
+  color: var(--nav-color);
+  text-decoration: none;
+  cursor: pointer;
+}
+nav:hover {
+  opacity: 1;
+}
+    </style>
+  </head>
+  <body>
+    <nav>
+      <span id="word-count">0 words &middot; 0 minutes</span> &middot; <a onclick="toggleTheme()">Toggle theme</a> &middot; <a onclick="toggleFont()">Toggle font</a>
+    </nav>
+    <textarea id="composer" placeholder="Start writing..." autofocus></textarea>
+    <script type="text/javascript">
+// @license magnet:?xt=urn:btih:90dc5c0be029de84e523b9b3922520e79e0e6f08&dn=cc0.txt CC0-1.0
+var $composer = document.getElementById('composer');
+var $wordcount = document.getElementById('word-count');
+var key;
+var typingTimer;
+var typingInterval = 200;
+function updateWordCount() {
+  var words = 0;
+  var content = $composer.value.trim();
+  if (content != '') {
+    words = content.replace(/\s+/gi, ' ').split(' ').length;
+  }
+  minutes = Math.floor(words/140);
+  $wordcount.textContent = words + ' word' + (words != 1 ? 's' : '') + ' · ' + minutes + ' minute' + (minutes != 1 ? 's' : '');
+}
+function loadContents() {
+  var content = localStorage.getItem(key);
+  if (content != null) {
+    $composer.value = content;
+  }
+}
+var updateContents = function() {
+  if ($composer.value == '') {
+    localStorage.removeItem(key);
+  }
+  else {
+    localStorage.setItem(key, $composer.value);
+  }
+  updateWordCount();
+}
+var resetTimer = function() {
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(updateContents, typingInterval);
+}
+function downloadData(filename, text) {
+  var text = localStorage.getItem(key);
+  if (text != null && text != '') {
+    var tmpElement = document.createElement('a');
+    tmpElement.setAttribute('href', 'data:text/markdown;charset=utf-8,' + encodeURIComponent(text));
+    tmpElement.setAttribute('download', key + '.md');
+    tmpElement.style.display = 'none';
+
+    document.body.appendChild(tmpElement);
+    tmpElement.click();
+    document.body.removeChild(tmpElement);
+  }
+}
+var saveEvent = function(event) {
+  if (event.keyCode == 83 && (event.metaKey || event.ctrlKey)) {
+    clearTimeout(typingTimer);
+    event.preventDefault();
+    updateContents();
+    if (event.shiftKey)
+      downloadData();
+  }
+}
+function toggleTheme() {
+  if (localStorage && localStorage.getItem('theme') == 'toggled') {
+    localStorage.removeItem('theme');
+  } else if (localStorage) {
+    localStorage.setItem('theme', 'toggled');
+  }
+  document.documentElement.classList.toggle('toggled');
+}
+function toggleFont() {
+  if (localStorage && localStorage.getItem('font') == 'mono') {
+    localStorage.removeItem('font');
+  } else if (localStorage) {
+    localStorage.setItem('font', 'mono');
+  }
+  document.documentElement.classList.toggle('mono');
+}
+key = (new URLSearchParams(window.location.search)).get('key');
+if (key == '' || key == null) {
+  key = 'null';
+}
+key = 'k-' + key;
+if (localStorage && localStorage.getItem('theme') == 'toggled') {
+  document.documentElement.classList.toggle('toggled');
+}
+if (localStorage && localStorage.getItem('font') == 'mono') {
+  document.documentElement.classList.toggle('mono');
+}
+$composer.addEventListener('keyup input', resetTimer);
+$composer.addEventListener('keydown', resetTimer);
+$composer.addEventListener('input', resetTimer);
+window.addEventListener('beforeunload', updateContents);
+window.addEventListener('keydown', saveEvent);
+loadContents();
+updateWordCount();
+// @license-end
+    </script>
+  </body>
+</html>
