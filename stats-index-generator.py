@@ -16,13 +16,17 @@
 
 # Generate index for GoAccess stats.
 
+import sys
 import datetime
 import os.path
 
-OUTPUT_DIR = '/srv/stats'
+if len(sys.argv) < 2:
+    sys.exit('Usage: stats-index-generator statsDir')
+
+dir = sys.argv[1]
 
 def has_info(link):
-    return os.path.isfile(OUTPUT_DIR + link + '/index.html')
+    return os.path.isfile(os.path.join(dir, link, 'index.html'))
 
 output = """<!DOCTYPE html>
 <html lang="en">
@@ -113,26 +117,26 @@ div.month li.week {
 output += '<h1><a class="no-format hover" href="/all">See stats of all time</a></h1>'
 
 for year in [2020]:
-    link = '/y/' + str(year)
+    link = 'y/' + str(year)
     if has_info(link):
-        output += '<div class="year"><h1><a class="no-format hover" href="' + link + '">' + str(year) + '</a></h1><div class="year-cal">'
+        output += '<div class="year"><h1><a class="no-format hover" href="/' + link + '">' + str(year) + '</a></h1><div class="year-cal">'
     else:
         output += '<div class="year"><h1>' + str(year) + '</h1><div class="year-cal">'
 
     for month in range(1, 13):
         date = datetime.datetime(year, month, 1)
-        link = date.strftime("/m/%Y/%m")
+        link = date.strftime("m/%Y/%m")
         if has_info(link):
-            output += '<div class="month"><h2><a class="no-format hover" href="' + link + '">' + datetime.datetime(year, month, 1).strftime("%B") + '</a></h2><ul>'
+            output += '<div class="month"><h2><a class="no-format hover" href="/' + link + '">' + datetime.datetime(year, month, 1).strftime("%B") + '</a></h2><ul>'
         else:
             output += '<div class="month"><h2>' + datetime.datetime(year, month, 1).strftime("%B") + '</h2><ul>'
 
         if date.isocalendar()[2] != 1:
             date = datetime.datetime(year, month, 1)
             isoweek = date.strftime("%V")
-            link = date.strftime("/w/%G/%V")
+            link = date.strftime("w/%G/%V")
             if has_info(link):
-                output += '<a class="no-format" href="' + link + '"><li class="week">' + isoweek + '</li></a>'
+                output += '<a class="no-format" href="/' + link + '"><li class="week">' + isoweek + '</li></a>'
             else:
                 output += '<li class="week">' + isoweek + '</li>'
 
@@ -147,16 +151,16 @@ for year in [2020]:
 
             if date.isocalendar()[2] == 1:
                 isoweek = date.strftime("%V")
-                link = date.strftime("/w/%G/%V")
+                link = date.strftime("w/%G/%V")
                 if has_info(link):
-                    output += '<a class="no-format" href="' + link + '"><li class="week">' + isoweek + '</li></a>'
+                    output += '<a class="no-format" href="/' + link + '"><li class="week">' + isoweek + '</li></a>'
                 else:
                     output += '<li class="week">' + isoweek + '</li>'
 
             today = ' class="today"' if datetime.datetime.today().date() == date.date() else ''
-            link = date.strftime("/d/%Y/%m/%d")
+            link = date.strftime("d/%Y/%m/%d")
             if has_info(link):
-                output += '<a class="no-format" href="' + link + '"><li' + today + '>' + str(day) + '</li></a>'
+                output += '<a class="no-format" href="/' + link + '"><li' + today + '>' + str(day) + '</li></a>'
             else:
                 output += '<li' + today + '>' + str(day) + '</li>'
 
@@ -166,5 +170,5 @@ for year in [2020]:
 
 output += '</body></html>\n'
 
-with open(OUTPUT_DIR + '/index.html', 'wt') as f:
+with open(os.path.join(dir, 'index.html'), 'wt') as f:
     f.write(output)
