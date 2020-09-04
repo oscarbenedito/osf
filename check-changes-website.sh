@@ -17,15 +17,21 @@
 # Script that notifies through Gotify when a website has changed.
 
 # File must implement notify funtion
-. "$(dirname "$(realpath "$0")")/notify.sh"
+FILE_DIR="$(dirname "$(realpath "$0")")"
+. "$FILE_DIR/notify.sh"
+URLS="$FILE_DIR/urls-changes.txt"
+
+[ ! -f "$URLS" ] && echo "Error: $URLS is not a file." && exit 1
 
 check_and_notify() {
-  newhash="$(curl "$URL" 2>/dev/null | sha256sum | cut -f 1 -d " ")"
-  [ "$HASH" != "$newhash" ] && notify "$TITLE" "$URL"
+  newhash="$(curl "$1" 2>/dev/null | sha256sum | cut -f 1 -d " ")"
+  [ "$2" != "$newhash" ] && notify "$3" "$1"
 }
 
-# Example usage:
-HASH="<hash>"
-URL="<url>"
-TITLE="<title>"
-check_and_notify
+while read -r url hash title
+do
+  check_and_notify "$url" "$hash" "$title"
+done < "$URLS"
+
+# Can also be used by calling check_and_notify directly. Example:
+# check_and_notify url hash title
