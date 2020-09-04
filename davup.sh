@@ -70,6 +70,6 @@ process_card() {
     done
 }
 
-# examples (resource address will be "${domain}/${resource}"
-resource="caldav/mycal" && get_cal | process_cal > calendar_and_todos.ics
-resource="carddav/mycard" && get_card | process_card > contacts.vcf
+# examples (resource address will be "${domain}/${resource}"):
+#     resource="caldav/mycal" && get_cal | process_cal > calendar_and_todos.ics
+#     resource="carddav/mycard" && get_card | process_card > contacts.vcf
