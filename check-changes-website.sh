@@ -16,9 +16,10 @@
 
 # Script that notifies through Gotify when a website has changed.
 
-# File must implement notify funtion
-FILE_DIR="$(dirname "$(realpath "$0")")"
-. "$FILE_DIR/notify.sh"
+# This scripts assumes there is an executable called "notify" in your PATH that
+# takes two arguments (the first one is the notification title and the second
+# one is the message).
+
 URLS="${XDG_CONFIG_HOME:-$HOME/.config}/osf/urls-check-changes.txt"
 
 [ ! -f "$URLS" ] && echo "Error: $URLS is not a file." && exit 1

@@ -14,10 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Script that notifies Gotify when someone logs in through SSH to a computer/server.
+# Script that sends a notification when someone logs in through SSH to a
+# computer/server.
 
-# File must implement notify funtion
-. "$(dirname "$(realpath "$0")")/notify.sh"
+# This scripts assumes there is an executable called "notify" in your PATH that
+# takes two arguments (the first one is the notification title and the second
+# one is the message).
 
 if [ "$PAM_TYPE" != "close_session" ]; then
   TITLE="SSH login: ${PAM_USER}@$(hostname)"

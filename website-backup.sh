@@ -18,8 +18,10 @@
 # destination files and puts each document in the corresponding file,
 # adding a date to the filename.
 
-FILE_DIR="$(dirname "$(realpath "$0")")"
-. "$FILE_DIR/notify.sh"
+# This scripts assumes there is an executable called "notify" in your PATH that
+# takes two arguments (the first one is the notification title and the second
+# one is the message).
+
 URLS="${XDG_CONFIG_HOME:-$HOME/.config}/osf/urls-backup.txt"
 BACKUPS="${XDG_DATA_HOME:-$HOME/.local/share}/osf/website-backup"
 
