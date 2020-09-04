@@ -19,7 +19,7 @@
 # File must implement notify funtion
 FILE_DIR="$(dirname "$(realpath "$0")")"
 . "$FILE_DIR/notify.sh"
-URLS="$FILE_DIR/urls-changes.txt"
+URLS="${XDG_CONFIG_HOME:-$HOME/.config}/osf/urls-check-changes.txt"
 
 [ ! -f "$URLS" ] && echo "Error: $URLS is not a file." && exit 1
 

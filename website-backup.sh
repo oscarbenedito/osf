@@ -20,8 +20,8 @@
 
 FILE_DIR="$(dirname "$(realpath "$0")")"
 . "$FILE_DIR/notify.sh"
-URLS="$FILE_DIR/urls.txt"
-BACKUPS="$HOME/backups"
+URLS="${XDG_CONFIG_HOME:-$HOME/.config}/osf/urls-backup.txt"
+BACKUPS="${XDG_DATA_HOME:-$HOME/.local/share}/osf/website-backup"
 
 [ ! -f "$URLS" ] && echo "Error: $URLS is not a file." && exit 1
 
