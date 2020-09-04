@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Atenea Updates Notifications
+# Moodle Updates Notifications
 # Copyright (C) 2020 Oscar Benedito <oscar@oscarbenedito.com>
 # Copyright (C) 2020 Ernesto Lanchares <e.lancha98@gmail.com>
 # Copyright (C) 2020 Ferran López <flg@tuta.io>
@@ -17,22 +17,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Get notified when new documents are uploaded to Atenea (an instance of
-# Moodle). Makes use of a Gotify server.
+# Get notified when new documents are uploaded to a Moodle instance. Makes use
+# of a Gotify server.
 #
-# The script assumes there is a file name "aun_config.json" with the
-# configuration. Example:
+# The script assumes there is a file on the same directory named
+# "mun_config.json" with the configuration. Example configuration file:
 #
 #     {
-#       "notification_domain": "<gotify-domain>",
+#       "moodle_domain": "my.moodle.domain",
+#       "gotify_domain": "my.gotify.domain",
 #       "time_interval": 120,
-#       "api_token": "<moodle-api-token>",
-#       "notification_token": "<gotify-token>",
+#       "moodle_api_token": "myMoodleAPIToken",
+#       "gotify_token": "myGotifyToken",
 #       "course_ids": {
 #         "56145": "GD",
 #         "56152": "EDPS"
 #       }
 #     }
+#
+# Note: the script assumes Moodle's web service is found at
+#     https://moodle_domain/webservice
+# If that is not the case, change the moodle_domain variable so that it does.
 
 
 import os
@@ -41,37 +46,30 @@ import json
 import time
 
 
-with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'aun_config.json'), 'r') as f:
-    CONFIG = json.load(f)
-
-
-NOTIFICATION_DOMAIN = CONFIG['notification_domain']
-TIME_INTERVAL = CONFIG['time_interval']
-COURSE_IDS = CONFIG['course_ids']
-API_TOKEN = CONFIG['api_token']
-NOTIFICATION_TOKEN = CONFIG['notification_token']
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'mun_config.json'), 'r') as f:
+    cg = json.load(f)
 
 
 def get_updates(id):
     parameters = {
-        'wstoken': API_TOKEN,
+        'wstoken': cg['moodle_api_token'],
         'moodlewsrestformat': 'json',
         'wsfunction': 'core_course_get_updates_since',
         'courseid': id,
-        'since': int(time.time()) - (TIME_INTERVAL + 20)
+        'since': int(time.time()) - (cg['time_interval'] + 20)
     }
-    response = requests.get('https://atenea.upc.edu/webservice/rest/server.php', params=parameters)
+    response = requests.get('https://' + cg['moodle_domain'] + '/webservice/rest/server.php', params=parameters)
     return response.json()['instances']
 
 
 def get_course_docs(id):
     parameters = {
-        'wstoken': API_TOKEN,
+        'wstoken': cg['moodle_api_token'],
         'moodlewsrestformat': 'json',
         'wsfunction': 'core_course_get_contents',
         'courseid': id,
     }
-    return requests.get('https://atenea.upc.edu/webservice/rest/server.php', params=parameters)
+    return requests.get('https://' + cg['moodle_domain'] + '/webservice/rest/server.php', params=parameters)
 
 
 def find_document(docs, doc_id):
@@ -83,7 +81,7 @@ def find_document(docs, doc_id):
 
 def send_notification(doc, course_name):
     if doc['modname'] == 'resource':
-        message = 'URL: ' + doc['contents'][0]['fileurl'] + '&token=' + API_TOKEN
+        message = 'URL: ' + doc['contents'][0]['fileurl'] + '&token=' + cg['moodle_api_token']
     else:
         message = doc['modplural']
 
@@ -92,9 +90,9 @@ def send_notification(doc, course_name):
         'message': message,
         'priority': 5
     }
-    requests.post('https://' + NOTIFICATION_DOMAIN + '/message?token=' + NOTIFICATION_TOKEN, data = data)
+    requests.post('https://' + cg['gotify_domain'] + '/message?token=' + cg['gotify_token'], data = data)
 
-for id, course_name in COURSE_IDS.items():
+for id, course_name in cg['course_ids'].items():
     updates = get_updates(id)
 
     if updates != []:
