@@ -1,9 +1,10 @@
-obj = $(basename $(wildcard *.sh) $(wildcard *.py))
+src = $(wildcard *.sh) $(wildcard *.py)
+obj = $(patsubst %,$(dest)/%,$(basename $(src)))
 dest = /usr/local/bin
 
-.PHONY: all
+.PHONY: install uninstall
 
-all: $(patsubst %, $(dest)/%, $(obj))
+install: $(obj)
 
 $(dest)/%: %.sh
 	cp -f $< $@
@@ -12,3 +13,6 @@ $(dest)/%: %.sh
 $(dest)/%: %.py
 	cp -f $< $@
 	chmod 755 $@
+
+uninstall:
+	rm -f $(obj)
