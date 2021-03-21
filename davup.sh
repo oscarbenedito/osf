@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 # DAVup
 # Copyright (C) 2020 Oscar Benedito <oscar@oscarbenedito.com>
 #

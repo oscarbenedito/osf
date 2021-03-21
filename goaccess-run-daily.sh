@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 # Copyright (C) 2020 Oscar Benedito <oscar@oscarbenedito.com>
 #
 # This program is free software: you can redistribute it and/or modify
