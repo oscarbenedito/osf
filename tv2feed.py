@@ -71,7 +71,7 @@ entries_per_show = 10
 shows = sys.argv[1:]        # alternatively, hardcode them in the script
 # until here!
 
-version = '0.2'             # TV2Feed version
+version = '0.3'             # TV2Feed version
 url_base = 'https://{}/{}'.format(domain, path + '/' if path != '' else '')
 id_base = 'tag:{},2021-05-19:/{}'.format(domain, path + '/' if path != '' else '')
 info_endpoint_tmpl = 'https://api.tvmaze.com/shows/{}'
@@ -128,7 +128,7 @@ for show in shows:
     if show_info['status'] != 'Running':
         feed_data.append({
             'airstamp': now,
-            'id': 'status',
+            'id': 'status/' + show_info['status'],
             'name': 'Show status: {}'.format(show_info['status']),
             'number': None,
             'season': None,
