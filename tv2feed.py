@@ -17,38 +17,44 @@
 
 # Follow TV shows using Atom feeds!
 #
-# How to use: go to https://www.tvmaze.com and search the shows you want to
-# follow. Write down their IDs (the show number in the URL) and then run the
-# following:
+# How to use
+# ----------
+#
+# Go to <https://www.tvmaze.com> and search the TV shows you want to follow.
+# Write down their IDs (the number in the URL) and then run the following:
 #
 #     tv2feed id1 id2 ...
 #
 # Or run it multiple times to get one feed per TV show. The feeds are expected
 # to go under:
 #
-#   - https://<domain>/<path>/feed: if multiple shows specified
-#   - https://<domain>/<path>/show/<show_id>: if only one show specified
+#   - `https://<domain>/<path>/feed`: if multiple shows specified
+#   - `https://<domain>/<path>/show/<show_id>`: if only one show specified
 #
-# Also note that if only one feed is specified, TV2Feed will generate the feed
-# assuming there is one feed per show (personalizing the title as well).
-#
-# Keep in mind that each show will make two API requests, and there is a limit
-# of 20 requests every 10 seconds (for contents that are not cached). If you are
-# following many shows, this script will sleep for 10 seconds and try again if
-# an API call returns a 429 error code, if it fails again (or the error code is
-# not 429), it will raise an error and exit.
+# That is because the feed URIs will point there. Note that if only one show is
+# specified, TV2Feed will generate it assuming there is one feed per show (which
+# will make the feed title the same as the show's).
 #
 # The API where the data is gathered from caches results for one hour, so you
 # can add cron jobs to run every hour:
 #
 #     0 * * * * /usr/local/bin/tv2feed 210 431 > /srv/www/tv2feed/feed
 #
-# or, alternatively (the following could also be scripted with just one cronjob):
+# or, alternatively (could also be scripted with just one cronjob):
 #
-#     0 * * * * /usr/local/bin/tv2feed 210 > /srv/www/tv2feed/show/1
-#     0 * * * * /usr/local/bin/tv2feed 431 > /srv/www/tv2feed/show/2
+#     0 * * * * /usr/local/bin/tv2feed 210 > /srv/www/tv2feed/show/210
+#     0 * * * * /usr/local/bin/tv2feed 431 > /srv/www/tv2feed/show/431
 #
-# All data generated is gathered from https://www.tvmaze.com and its API.
+# Other notes
+# -----------
+#
+# Each show will make two API requests, and there is a limit of 20 requests
+# every 10 seconds (for contents that are not cached). If you are following many
+# shows, this script will sleep for 10 seconds and try again if an API call
+# returns a 429 error code, if it fails again (or the error code is not 429), it
+# will raise an error and exit.
+#
+# All data generated is gathered from [TVmaze][]'s API.
 
 
 import sys
