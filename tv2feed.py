@@ -71,7 +71,7 @@ entries_per_show = 10
 shows = sys.argv[1:]        # alternatively, hardcode them in the script
 # until here!
 
-version = '0.3'             # TV2Feed version
+version = '0.3.1'           # TV2Feed version
 url_base = 'https://{}/{}'.format(domain, path + '/' if path != '' else '')
 id_base = 'tag:{},2021-05-19:/{}'.format(domain, path + '/' if path != '' else '')
 info_endpoint_tmpl = 'https://api.tvmaze.com/shows/{}'
@@ -163,7 +163,7 @@ for episode in sorted(feed_data, reverse=True, key=lambda x: x['airstamp']):
     ret += '<entry>'
     ret += '<title>{} - {}{}</title>'.format(san(episode['show_name']), sn, san(episode['name']))
     ret += '<link rel="alternate" href="{}" />'.format(san(episode['url']))
-    ret += '<id>' + id_base + 'show/' + show + '/episode/' + san(episode['id']) + '</id>'
+    ret += '<id>' + id_base + 'show/' + san(episode['show_id']) + '/episode/' + san(episode['id']) + '</id>'
     ret += '<updated>{}</updated>'.format(san(episode['airstamp']))
     ret += '<summary type="html">{}</summary>'.format(san(episode['summary']))
     ret += '</entry>'
