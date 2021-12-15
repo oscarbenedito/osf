@@ -54,7 +54,7 @@
 # returns a 429 error code, if it fails again (or the error code is not 429), it
 # will raise an error and exit.
 #
-# All data generated is gathered from [TVmaze][]'s API.
+# All data generated is gathered from TVmaze's API.
 
 
 import sys
@@ -71,7 +71,7 @@ entries_per_show = 10
 shows = sys.argv[1:]        # alternatively, hardcode them in the script
 # until here!
 
-version = '0.3.1'           # TV2Feed version
+version = '0.3.2'           # TV2Feed version
 url_base = 'https://{}/{}'.format(domain, path + '/' if path != '' else '')
 id_base = 'tag:{},2021-05-19:/{}'.format(domain, path + '/' if path != '' else '')
 info_endpoint_tmpl = 'https://api.tvmaze.com/shows/{}'
@@ -106,10 +106,11 @@ for show in shows:
     show_info = api_call(info_endpoint_tmpl.format(show))
     episodes = api_call(episodes_endpoint_tmpl.format(show))
 
+    episodes = list(filter(lambda x: x['airstamp'] is not None and x['airstamp'] < now, episodes))
     episodes.sort(reverse=True, key=lambda x: x['airstamp'])
 
     countdown = entries_per_show
-    for episode in filter(lambda x: x['airstamp'] < now, episodes):
+    for episode in episodes:
         feed_data.append({
             'airstamp': episode['airstamp'],
             'id': episode['id'],
