@@ -71,7 +71,7 @@ entries_per_show = 10
 shows = sys.argv[1:]        # alternatively, hardcode them in the script
 # until here!
 
-version = '0.3.2'           # TV2Feed version
+version = '1.0'             # TV2Feed version
 url_base = 'https://{}/{}'.format(domain, path + '/' if path != '' else '')
 id_base = 'tag:{},2021-05-19:/{}'.format(domain, path + '/' if path != '' else '')
 info_endpoint_tmpl = 'https://api.tvmaze.com/shows/{}'
