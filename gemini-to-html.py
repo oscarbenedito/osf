@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Copyright (C) 2021 Oscar Benedito <oscar@oscarbenedito.com>
 # License: Affero General Public License version 3 or later
