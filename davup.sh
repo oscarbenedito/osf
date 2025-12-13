@@ -4,20 +4,20 @@
 
 # DAVup: back up calendars and contacts from a DAV server (CalDAV and CardDAV).
 
-domain="<DAV server address>"       # example: https://dav.mailbox.org (no trailing "/")
-user="<username>"
-pass="<password>"
+DAV_DOMAIN="${DAV_DOMAIN:-dav_server_address}"  # example: https://dav.mailbox.org (no trailing "/")
+DAV_USER="${DAV_USER:-dav_user}"
+DAV_PASS="${DAV_PASS:-dav_pass}"
 
 get_cal() {
-    curl -s -X "PROPFIND" -u "${user}:${pass}" -H "Content-Type: text/xml" -H "Depth: 1" \
+    curl -s -X "PROPFIND" -u "${DAV_USER}:${DAV_PASS}" -H "Content-Type: text/xml" -H "Depth: 1" \
         --data "<propfind xmlns='DAV:'><prop><calendar-data xmlns='urn:ietf:params:xml:ns:caldav'/></prop></propfind>" \
-        "${domain}/${resource}"
+        "${DAV_DOMAIN}/${resource}"
 }
 
 get_card() {
-    curl -s -X "PROPFIND" -u "${user}:${pass}" -H "Content-Type: text/xml" -H "Depth: 1" \
+    curl -s -X "PROPFIND" -u "${DAV_USER}:${DAV_PASS}" -H "Content-Type: text/xml" -H "Depth: 1" \
         --data "<propfind xmlns='DAV:'><prop><address-data xmlns=\"urn:ietf:params:xml:ns:carddav\"/></prop></propfind>" \
-        "${domain}/${resource}"
+        "${DAV_DOMAIN}/${resource}"
 }
 
 process_cal() {
@@ -57,6 +57,6 @@ process_card() {
     done
 }
 
-# examples (resource address will be "${domain}/${resource}"):
+# examples (resource address will be "${DAV_DOMAIN}/${resource}"):
 #     resource="caldav/mycal" && get_cal | process_cal > calendar_and_todos.ics
 #     resource="carddav/mycard" && get_card | process_card > contacts.vcf

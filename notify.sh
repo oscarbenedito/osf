@@ -4,9 +4,9 @@
 
 # Gotify notify: notifies user using a Gotify instance.
 
-GOTIFY_DOMAIN="<redacted>"
-GOTIFY_TOKEN="<redacted>"
+GOTIFY_DOMAIN="${GOTIFY_DOMAIN:-redacted}"
+GOTIFY_TOKEN="${GOTIFY_TOKEN:-redacted}"
 
 curl -X POST "https://$GOTIFY_DOMAIN/message?token=$GOTIFY_TOKEN" \
-  -F "title=$1" -F "message=$2" -F "priority=${3:-5}" \
+  -F "title=${1:- }" -F "message=${2:-No message.}" -F "priority=${3:-5}" \
   >/dev/null 2>&1

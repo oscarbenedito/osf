@@ -5,7 +5,7 @@
 tmp="$(df -Ph | grep ' /$')"
 used="$(echo "$tmp" | awk {'print $5'})"
 left="$(echo "$tmp" | awk {'print $4'})"
-max=80
+max=${MAX_THRESHOLD:-80}
 
 if [ "${used%?}" -ge "${max}" ]; then
     notify "Disk usage warning" "$(hostname) has used $used of its disk space. Space left: $left."

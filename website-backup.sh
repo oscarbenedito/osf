@@ -10,15 +10,15 @@
 # takes two arguments (the first one is the notification title and the second
 # one is the message).
 
-URLS="${XDG_CONFIG_HOME:-$HOME/.config}/osf/urls-backup.txt"
-BACKUPS="${XDG_DATA_HOME:-$HOME/.local/share}/osf/website-backup"
+URLS_FILE="${URLS_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/osf/urls-backup.txt}"
+TARGET_DIR="${TARGET_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/osf/website-backup}"
 
-[ ! -f "$URLS" ] && echo "Error: $URLS is not a file." && exit 1
+[ ! -f "$URLS_FILE" ] && echo "Error: $URLS_FILE is not a file." && exit 1
 
 backup() {
-  mkdir -p "$BACKUPS/$2"
-  output="$BACKUPS/$2/$(date +"%Y-%m-%d")-$2"
-  last="$BACKUPS/$2/$(date --date="yesterday" +"%Y-%m-%d")-$2"
+  mkdir -p "$TARGET_DIR/$2"
+  output="$TARGET_DIR/$2/$(date +"%Y-%m-%d")-$2"
+  last="$TARGET_DIR/$2/$(date --date="yesterday" +"%Y-%m-%d")-$2"
   # save new copy
   curl -s -X GET -H "X-Auth-Token: $3" "$1" > "$output" \
     || notify "Website backup error" "Error backing up $2"
@@ -29,7 +29,7 @@ backup() {
 while read -r url file token
 do
   backup "$url" "$file" "$token"
-done < "$URLS"
+done < "$URLS_FILE"
 
 # Can also be used by calling backup directly. Example:
 # backup url file [token]
