@@ -24,6 +24,9 @@ backup() {
     || notify "Website backup error" "Error backing up $2"
   # delete last if duplicated
   cmp -s "$output" "$last" && rm "$last"
+
+  # this is needed so that if the last cmp returns false, the function still succeeds
+  return 0
 }
 
 while read -r url file token
