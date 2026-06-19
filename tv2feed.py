@@ -10,7 +10,19 @@
 # Go to <https://www.tvmaze.com> and search the TV shows you want to follow.
 # Write down their IDs (the number in the URL) and then run the following:
 #
-#     tv2feed id1 id2 ...
+#     tv2feed /etc/tv2feed.json
+#
+# with contents such as:
+#
+#     {
+#       "domain": "example.com",
+#       "path": "tv2feed",  # leave empty for content under https://domain/
+#       "entries_per_show": 10,
+#       "shows": [
+#         {"id": 210, "name": "Show name for your own reference"},
+#         {"id": 431, "name": "Another show"}   # only id is used by TV2Feed
+#       ]
+#     }
 #
 # Or run it multiple times to get one feed per TV show. The feeds are expected
 # to go under:
@@ -25,12 +37,12 @@
 # The API where the data is gathered from caches results for one hour, so you
 # can add cron jobs to run every hour:
 #
-#     0 * * * * /usr/local/bin/tv2feed 210 431 > /srv/www/tv2feed/feed
+#     0 * * * * /usr/local/bin/tv2feed /etc/tv2feed.json > /srv/www/tv2feed/feed
 #
-# or, alternatively (could also be scripted with just one cronjob):
+# or, alternatively, use one config file per show:
 #
-#     0 * * * * /usr/local/bin/tv2feed 210 > /srv/www/tv2feed/show/210
-#     0 * * * * /usr/local/bin/tv2feed 431 > /srv/www/tv2feed/show/431
+#     0 * * * * /usr/local/bin/tv2feed /etc/tv2feed-210.json > /srv/www/tv2feed/show/210
+#     0 * * * * /usr/local/bin/tv2feed /etc/tv2feed-431.json > /srv/www/tv2feed/show/431
 #
 # Other notes
 # -----------
@@ -50,17 +62,7 @@ import json
 import datetime
 import time
 
-
-# edit these variables
-domain = 'oscarbenedito.com'
-path = 'projects/tv2feed'   # leave empty for content under https://domain/
-entries_per_show = 10
-shows = sys.argv[1:]        # alternatively, hardcode them in the script
-# until here!
-
-version = '1.0'             # TV2Feed version
-url_base = 'https://{}/{}'.format(domain, path + '/' if path != '' else '')
-id_base = 'tag:{},2021-05-19:/{}'.format(domain, path + '/' if path != '' else '')
+version = '1.1'             # TV2Feed version
 info_endpoint_tmpl = 'https://api.tvmaze.com/shows/{}'
 episodes_endpoint_tmpl = 'https://api.tvmaze.com/shows/{}/episodes?specials=1'
 
@@ -84,8 +86,22 @@ def api_call(url):
     return json.load(response)
 
 
+if len(sys.argv) != 2:
+    sys.exit('Usage: tv2feed config.json')
+
+with open(sys.argv[1], encoding='utf-8') as config_file:
+    config = json.load(config_file)
+
+domain = config['domain']
+path = config['path']
+entries_per_show = config.get('entries_per_show', 10)
+shows = [show['id'] for show in config['shows']]
+url_base = 'https://{}/{}'.format(domain, path + '/' if path != '' else '')
+id_base = 'tag:{},2021-05-19:/{}'.format(domain, path + '/' if path != '' else '')
+
+
 if len(shows) < 1:
-    sys.exit('Usage: tv2feed id1 [id2 [id3 ...]]')
+    sys.exit('Config must contain at least one show')
 
 now = datetime.datetime.now(datetime.timezone.utc).isoformat()
 feed_data = []
@@ -106,7 +122,7 @@ for show in shows:
             'season': episode['season'],
             'show_id': show_info['id'],
             'show_name': show_info['name'],
-            'summary': episode['summary'],
+            'summary': str(episode['summary']) + '<br>IMDB: ' + str(show_info['externals']['imdb']),
             'url': episode['url']
         })
         countdown -= 1
